@@ -1,4 +1,6 @@
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
+
+import AppText from "./AppText";
 
 import { Radius } from "../theme/radius";
 import { useTheme } from "../theme/useTheme";
@@ -13,16 +15,22 @@ export default function Button({ title, onPress }: ButtonProps) {
 
   return (
     <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.8}
       style={[
         styles.button,
         {
           backgroundColor: theme.primary,
         },
       ]}
-      onPress={onPress}
-      activeOpacity={0.8}
     >
-      <Text style={styles.text}>{title}</Text>
+      <AppText
+        style={{
+          color: "#FFF",
+        }}
+      >
+        {title}
+      </AppText>
     </TouchableOpacity>
   );
 }
@@ -30,14 +38,10 @@ export default function Button({ title, onPress }: ButtonProps) {
 const styles = StyleSheet.create({
   button: {
     height: 50,
+
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: Radius.md,
-  },
 
-  text: {
-    color: "#FFF",
-    fontSize: 16,
-    fontWeight: "600",
+    borderRadius: Radius.md,
   },
 });

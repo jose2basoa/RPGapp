@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 
 import AppText from "../../src/components/AppText";
 import CampaignCard from "../../src/components/CampaignCard";
@@ -15,14 +16,22 @@ export default function CampaignsScreen() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const router = useRouter();
 
-  useEffect(() => {
-    loadCampaigns();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadCampaigns();
+    }, []),
+  );
 
   async function loadCampaigns() {
-    const data = await getUserCampaigns();
+    try {
+      const data = await getUserCampaigns();
 
-    setCampaigns(data);
+      setCampaigns(data);
+    } catch (error) {
+      console.error(error);
+
+      alert("Erro ao carregar campanhas.");
+    }
   }
 
   const masterCampaigns = campaigns.filter((c) => c.role === "MASTER");
@@ -32,13 +41,17 @@ export default function CampaignsScreen() {
   return (
     <Screen scrollable>
       <AppText variant="title">Minhas Campanhas</AppText>
-
-      <View style={{ height: Spacing.lg }} />
-
-      <AppText variant="subtitle">Como Mestre</AppText>
-
       <View style={{ height: Spacing.md }} />
+      {campaigns.length === 0 && (
+        <>
+          <AppText>Você ainda não participa de nenhuma campanha.</AppText>
 
+          <View style={{ height: Spacing.lg }} />
+        </>
+      )}
+      <View style={{ height: Spacing.lg }} />
+      <AppText variant="subtitle">Como Mestre</AppText>
+      <View style={{ height: Spacing.md }} />
       {masterCampaigns.map((campaign) => (
         <View
           key={campaign.id}
@@ -52,13 +65,9 @@ export default function CampaignsScreen() {
           />
         </View>
       ))}
-
       <View style={{ height: Spacing.xl }} />
-
       <AppText variant="subtitle">Como Jogador</AppText>
-
       <View style={{ height: Spacing.md }} />
-
       {playerCampaigns.map((campaign) => (
         <View
           key={campaign.id}
@@ -72,8 +81,10 @@ export default function CampaignsScreen() {
           />
         </View>
       ))}
-
-      <FloatingMenu onCreateCampaign={() => {}} onJoinCampaign={() => {}} />
+      <FloatingMenu
+        onCreateCampaign={() => router.push("/(tabs)/create-campaign")}
+        onJoinCampaign={() => router.push("/(tabs)/join-campaign")}
+      />{" "}
     </Screen>
   );
 }

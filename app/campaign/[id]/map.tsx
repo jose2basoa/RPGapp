@@ -1,10 +1,10 @@
 import AppText from "../../../src/components/AppText";
 import Screen from "../../../src/components/Screen";
 
-export default function CharactersScreen() {
+export default function MapScreen() {
   return (
     <Screen>
-      <AppText variant="title">Personagens</AppText>
+      <AppText variant="title">Mapa</AppText>
     </Screen>
   );
 }
