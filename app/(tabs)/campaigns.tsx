@@ -84,7 +84,7 @@ export default function CampaignsScreen() {
       <FloatingMenu
         onCreateCampaign={() => router.push("/(tabs)/create-campaign")}
         onJoinCampaign={() => router.push("/(tabs)/join-campaign")}
-      />{" "}
+      />
     </Screen>
   );
 }

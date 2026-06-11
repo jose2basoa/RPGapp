@@ -49,6 +49,20 @@ export default function TabLayout() {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="create-campaign"
+        options={{
+          href: null,
+        }}
+      />
+
+      <Tabs.Screen
+        name="join-campaign"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }

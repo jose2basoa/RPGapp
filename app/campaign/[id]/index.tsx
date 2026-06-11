@@ -1,4 +1,5 @@
-import { useLocalSearchParams } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 
 import AppText from "../../../src/components/AppText";
@@ -8,12 +9,13 @@ import { getCampaignById } from "../../../src/services/campaignService";
 
 import { CampaignDetails } from "../../../src/types/campaignDetails";
 
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { Spacing } from "../../../src/theme/spacing";
 
 export default function CampaignHomeScreen() {
   const { id } = useLocalSearchParams();
+  const router = useRouter();
 
   const [campaign, setCampaign] = useState<CampaignDetails | null>(null);
 
@@ -53,7 +55,16 @@ export default function CampaignHomeScreen() {
 
   return (
     <Screen>
-      <AppText variant="title">{campaign.name}</AppText>
+      <AppText variant="title">
+        {" "}
+        <Pressable
+          onPress={() => router.push("/campaigns")}
+          style={{ marginLeft: 16 }}
+        >
+          <Ionicons name="arrow-back" size={24} color="white" />
+        </Pressable>
+        {campaign.name}
+      </AppText>
 
       <View
         style={{

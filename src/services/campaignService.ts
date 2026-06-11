@@ -19,10 +19,6 @@ export async function getUserCampaigns(): Promise<Campaign[]> {
     throw error;
   }
 
-  console.log(
-    JSON.stringify(data, null, 2)
-  );
-
   return (data ?? []).map((member: any) => ({
     id: member.campaigns.id,
     name: member.campaigns.name,
@@ -44,9 +40,6 @@ export async function createCampaign(
   if (!user) {
     throw new Error("Usuário não autenticado");
   }
-
-  console.log("AUTH USER:", user);
-  console.log("AUTH UID:", user?.id);
 
   const { data: campaign, error } =
     await supabase
