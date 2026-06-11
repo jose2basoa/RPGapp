@@ -1,124 +1,169 @@
-import { useState } from "react";
-
+import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import React, { useState } from "react";
+import { Alert, Pressable, StyleSheet, TextInput, View } from "react-native";
 
 import AppText from "../../src/components/AppText";
-import Button from "../../src/components/Button";
-import Input from "../../src/components/Input";
 import Screen from "../../src/components/Screen";
 
-import { createCampaign } from "../../src/services/campaignService";
+import { joinCampaign } from "../../src/services/campaignService";
+import { useTheme } from "../../src/theme/useTheme";
 
-import { View } from "react-native";
+export default function JoinCampaignScreen() {
+  const theme = useTheme();
 
-import { Spacing } from "../../src/theme/spacing";
-
-export default function CreateCampaignScreen() {
-  const [name, setName] = useState("");
-
-  const [system, setSystem] = useState("");
-
-  const [description, setDescription] = useState("");
+  const [inviteCode, setInviteCode] = useState("");
 
   const [loading, setLoading] = useState(false);
 
-  async function handleCreate() {
-    if (loading) {
+  async function handleJoin() {
+    if (!inviteCode.trim()) {
+      Alert.alert("Código obrigatório", "Digite um código de convite.");
       return;
     }
 
     try {
-      if (!name.trim()) {
-        alert("Informe o nome da campanha");
-        return;
-      }
-
-      if (!system.trim()) {
-        alert("Informe o sistema");
-        return;
-      }
-
-      if (name.length > 50) {
-        alert("O nome da campanha deve ter no máximo 50 caracteres.");
-
-        return;
-      }
-
-      if (system.length > 30) {
-        alert("O sistema deve ter no máximo 30 caracteres.");
-
-        return;
-      }
-
       setLoading(true);
 
-      const campaign = await createCampaign(
-        name.trim(),
-        system.trim(),
-        description.trim(),
+      await joinCampaign(inviteCode);
+
+      Alert.alert("Sucesso", "Você entrou na campanha.");
+
+      router.replace("/campaigns");
+    } catch (error: any) {
+      Alert.alert(
+        "Erro",
+        error.message || "Não foi possível entrar na campanha.",
       );
-
-      setName("");
-      setSystem("");
-      setDescription("");
-
-      router.replace(`/campaign/${campaign.id}`);
-    } catch (error) {
-      console.error(error);
-
-      alert("Erro ao criar campanha.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <Screen scrollable>
-      <AppText variant="title">Criar Campanha</AppText>
+    <Screen>
+      <View style={styles.header}>
+        <Pressable onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color={theme.text} />
+        </Pressable>
 
-      <View
-        style={{
-          height: Spacing.lg,
-        }}
-      />
+        <AppText variant="title">Entrar em Campanha</AppText>
+      </View>
 
-      <Input
-        placeholder="Nome da campanha"
-        value={name}
-        onChangeText={setName}
-      />
+      <View style={styles.card}>
+        <View style={styles.iconContainer}>
+          <Ionicons name="ticket-outline" size={48} color={theme.primary} />
+        </View>
 
-      <View
-        style={{
-          height: Spacing.md,
-        }}
-      />
+        <View
+          style={{
+            height: 16,
+          }}
+        />
 
-      <Input placeholder="Sistema" value={system} onChangeText={setSystem} />
+        <AppText variant="subtitle">Código de Convite</AppText>
 
-      <View
-        style={{
-          height: Spacing.md,
-        }}
-      />
+        <View
+          style={{
+            height: 8,
+          }}
+        />
 
-      <Input
-        placeholder="Descrição (opcional)"
-        value={description}
-        onChangeText={setDescription}
-        multiline
-      />
+        <AppText>
+          Digite o código enviado pelo mestre para entrar na campanha.
+        </AppText>
 
-      <View
-        style={{
-          height: Spacing.lg,
-        }}
-      />
+        <View
+          style={{
+            height: 24,
+          }}
+        />
 
-      <Button
-        title={loading ? "Criando..." : "Criar Campanha"}
-        onPress={handleCreate}
-      />
+        <TextInput
+          style={[
+            styles.input,
+            {
+              color: theme.text,
+              borderColor: theme.border,
+            },
+          ]}
+          placeholder="A7K9PQ"
+          placeholderTextColor={theme.textSecondary}
+          autoCapitalize="characters"
+          maxLength={6}
+          value={inviteCode}
+          onChangeText={(text) => setInviteCode(text.toUpperCase())}
+        />
+
+        <View
+          style={{
+            height: 20,
+          }}
+        />
+
+        <Pressable
+          style={[
+            styles.button,
+            {
+              backgroundColor: theme.primary,
+            },
+            loading && styles.buttonDisabled,
+          ]}
+          onPress={handleJoin}
+          disabled={loading}
+        >
+          <Ionicons name="log-in-outline" size={18} color="#fff" />
+
+          <AppText>{loading ? "Entrando..." : "Entrar na Campanha"}</AppText>
+        </Pressable>
+      </View>
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 24,
+  },
+
+  backButton: {
+    marginRight: 12,
+  },
+
+  card: {
+    borderRadius: 16,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.08)",
+  },
+
+  iconContainer: {
+    alignItems: "center",
+  },
+
+  input: {
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontSize: 20,
+    letterSpacing: 4,
+    textAlign: "center",
+    fontWeight: "600",
+  },
+
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 14,
+    borderRadius: 12,
+  },
+
+  buttonDisabled: {
+    opacity: 0.6,
+  },
+});

@@ -5,11 +5,9 @@ export interface CampaignDetails {
 
   system: string;
 
-  description?: string;
-
   status: string;
 
-  owner_id: string;
-
-  created_at: string;
+  description?: string;
+  
+  invite_code?: string;
 }

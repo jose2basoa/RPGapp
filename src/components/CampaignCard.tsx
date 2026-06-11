@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import AppText from "./AppText";
@@ -14,33 +15,58 @@ interface CampaignCardProps {
 export default function CampaignCard({ campaign, onPress }: CampaignCardProps) {
   const theme = useTheme();
 
-  const statusColor =
-    campaign.status === "ONLINE" ? theme.success : theme.textSecondary;
+  const isOnline = campaign.status === "ONLINE";
+
+  const statusColor = isOnline ? theme.success : theme.textSecondary;
+
+  const roleIcon = campaign.role === "MASTER" ? "crown" : "game-controller";
+
+  const roleLabel = campaign.role === "MASTER" ? "Mestre" : "Jogador";
 
   return (
-    <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
+    <TouchableOpacity activeOpacity={0.85} onPress={onPress}>
       <Card>
-        <AppText variant="subtitle">{campaign.name}</AppText>
+        <View style={styles.header}>
+          <View style={styles.titleContainer}>
+            <AppText variant="subtitle">{campaign.name}</AppText>
 
-        <View style={styles.spacing} />
+            <AppText
+              style={{
+                color: theme.textSecondary,
+              }}
+            >
+              Sistema: {campaign.system || "Não definido"}
+            </AppText>
+          </View>
 
-        <AppText>Sistema: {campaign.system}</AppText>
-
-        <AppText>{campaign.role === "MASTER" ? "Mestre" : "Jogador"}</AppText>
-
-        <View style={styles.statusContainer}>
-          <View
-            style={[
-              styles.statusDot,
-              {
-                backgroundColor: statusColor,
-              },
-            ]}
+          <Ionicons
+            name="chevron-forward"
+            size={22}
+            color={theme.textSecondary}
           />
+        </View>
 
-          <AppText>
-            {campaign.status === "ONLINE" ? "Online" : "Offline"}
-          </AppText>
+        <View style={styles.separator} />
+
+        <View style={styles.footer}>
+          <View style={styles.roleContainer}>
+            <Ionicons name={roleIcon as any} size={16} color={theme.primary} />
+
+            <AppText>{roleLabel}</AppText>
+          </View>
+
+          <View style={styles.statusContainer}>
+            <View
+              style={[
+                styles.statusDot,
+                {
+                  backgroundColor: statusColor,
+                },
+              ]}
+            />
+
+            <AppText>{isOnline ? "Sessão Ativa" : "Offline"}</AppText>
+          </View>
         </View>
       </Card>
     </TouchableOpacity>
@@ -48,14 +74,38 @@ export default function CampaignCard({ campaign, onPress }: CampaignCardProps) {
 }
 
 const styles = StyleSheet.create({
-  spacing: {
-    height: 8,
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  titleContainer: {
+    flex: 1,
+    marginRight: 12,
+  },
+
+  separator: {
+    height: 1,
+    backgroundColor: "rgba(255,255,255,0.08)",
+    marginVertical: 14,
+  },
+
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  roleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
   },
 
   statusContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 12,
   },
 
   statusDot: {

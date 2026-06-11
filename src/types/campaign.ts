@@ -8,12 +8,9 @@ export type CampaignRole =
 
 export interface Campaign {
   id: string;
-
   name: string;
-
   system: string;
-
-  role: CampaignRole;
-
-  status: CampaignStatus;
+  status: string;
+  role?: string;
+  invite_code?: string;
 }
