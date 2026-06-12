@@ -19,7 +19,7 @@ export default function CampaignCard({ campaign, onPress }: CampaignCardProps) {
 
   const statusColor = isOnline ? theme.success : theme.textSecondary;
 
-  const roleIcon = campaign.role === "MASTER" ? "crown" : "game-controller";
+  const roleIcon = campaign.role === "MASTER" ? "trophy" : "game-controller";
 
   const roleLabel = campaign.role === "MASTER" ? "Mestre" : "Jogador";
 

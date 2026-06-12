@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Dice Roller 3D</title>
+
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <div id="scene-container"></div>
+
+    <div id="results">
+        Nenhum dado rolado
+    </div>
+
+    <div id="controls">
+
+        <button data-dice="4">D4</button>
+        <button data-dice="6">D6</button>
+        <button data-dice="8">D8</button>
+        <button data-dice="12">D12</button>
+        <button data-dice="20">D20</button>
+
+        <button id="roll-btn">
+            ROLAR
+        </button>
+
+    </div>
+
+    <script
+        type="module"
+        src="./main.js">
+    </script>
+
+</body>
+</html>
